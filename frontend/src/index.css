@@ -19,31 +19,21 @@ body {
   height: 100vh;
   padding-top: 15px;
 }
-.Header {
-  top: 0;
-  max-width: 600px;
-  background-color: darkblue;
-  color: #fff;
-  padding: 4px;
-  position: fixed;
-  width: 100%;
+
+.DashBoard {
+  padding: 10px;
 }
-.Footer {
-  bottom: 0;
-  position: fixed;
-  width: 100%;
-  max-width: 600px;
-  background-color: darkblue;
-  color: #fff;
-  padding: 4px;
+.Dashboard-header {
+  padding: 12px;
 }
-.Home,
-.Login,
-.Register,
-.Logout,
-.About {
-  padding: 55px;
+.cards-container {
+  padding: 12px;
 }
+.card {
+  margin-bottom: 16px;
+  border-bottom: 1px solid gray;
+}
+
 .Nav {
   display: flex;
   background-color: #333;
@@ -84,6 +74,7 @@ body {
 .Register {
   display: flex;
   flex-direction: column;
+  padding: 12px;
 }
 .Login label,
 .Register label {
@@ -96,8 +87,7 @@ body {
   padding: 10px;
   margin-bottom: 4px;
 }
-.Login button,
-.Register button {
+.submit {
   font-size: 1rem;
   align-self: center;
   width: 120px;
@@ -113,7 +103,8 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.Logout button {
+
+.logout {
   font-size: 1rem;
   align-self: center;
   width: 120px;
@@ -123,7 +114,20 @@ body {
   padding: 8px;
   border: none;
   cursor: pointer;
+  margin-bottom: 12px;
 }
-.Logout button:hover {
+.logout:hover {
   background-color: darkred;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  padding: 6px;
+  border-radius: 6;
+  text-align: center;
+  margin-top: 12px;
+  background-color: lightblue;
+  border: none;
 }

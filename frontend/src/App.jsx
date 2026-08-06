@@ -1,14 +1,10 @@
-import Home from "./components/Home";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import About from "./components/About";
-import Logout from "./pages/Logout";
-import Nav from "./components/Nav";
+
 import PrivateRoute from "./components/PrivateRoute";
 import { useEffect, useState } from "react";
+import DashBoard from "./pages/DashBoard";
 
 function App() {
   const API_URL = "http://localhost:3500";
@@ -111,7 +107,7 @@ function App() {
       alert("Please enter a valid email.");
       return;
     } else if (!newPassword) {
-      alert("Enater a valid password");
+      alert("Enter a valid password");
       return;
     }
     try {
@@ -157,18 +153,7 @@ function App() {
   };
   return (
     <div className="App">
-      <Header />
-      <Nav user={user} />
       <Routes>
-        <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Home user={user} />} />
-          <Route
-            path="/logout"
-            element={<Logout handleLogout={handleLogout} />}
-          />
-          <Route path="/about" element={<About />} />
-        </Route>
-
         <Route
           path="/login"
           element={
@@ -195,9 +180,13 @@ function App() {
             />
           }
         />
+        <Route element={<PrivateRoute />}>
+          <Route
+            path="/"
+            element={<DashBoard user={user} handleLogout={handleLogout} />}
+          />
+        </Route>
       </Routes>
-
-      <Footer />
     </div>
   );
 }

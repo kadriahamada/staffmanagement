@@ -5,8 +5,8 @@ const Logout = ({ handleLogout }) => {
     <main className="Logout">
       <p>
         Thus, Attention this page is specifically for login out marq you when
-        you log out you will have to register again in case you still want to
-        have access to the application
+        you log out you will have to login again if you want to access to the
+        application
       </p>
       <button type="button" onClick={handleLogout}>
         Logout

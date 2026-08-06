@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const Register = ({
   username,
   setUserName,
@@ -38,7 +38,12 @@ const Register = ({
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit">Register</button>
+      <button className="btn">
+        <Link to="/login">Login Instead</Link>
+      </button>
+      <button type="submit" className="submit">
+        Register
+      </button>
     </form>
   );
 };
