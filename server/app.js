@@ -1,22 +1,21 @@
 require("dotenv").config();
 const express = require("express");
+const app = express();
 const pool = require("./config/db");
-
+const { logger } = require("./middlewares/logEvents");
+const errorHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 
-const app = express();
 app.use(cors());
-
 app.use(express.json());
-
-const PORT = process.env.PORT || 3500;
+app.use(logger);
 
 app.use("/register", require("./routes/register"));
 app.use("/auth", require("./routes/auth"));
 
-app.get("/", (req, res) => {
-  res.json("App is successfully running.");
-});
+const PORT = process.env.PORT || 3500;
+
+app.use(errorHandler);
 
 const testConnection = () => {
   const connection = pool.getConnection();
