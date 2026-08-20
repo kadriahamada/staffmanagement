@@ -1,5 +1,6 @@
 node_modules/
-.env
+.env/
+logs/
 frontend/node_modules/
 dist/
 frontend/dist/
