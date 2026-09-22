@@ -8,59 +8,78 @@ const handleLogin = async (req, res, next) => {
     const { email, password } = req.body;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^.{8,}$/;
 
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+    // Validate input
     if (!email || !password) {
       throw AppError("User email and password are required!", 400);
     }
 
     if (!emailRegex.test(email) || !passwordRegex.test(password)) {
-      throw AppError("Invalid email or password format.", 400);
+      throw AppError("Invalid email or password.", 400);
     }
 
+    // Find user
     const foundUser = await userModel.findExistUser(email);
 
     if (!foundUser) {
-      throw AppError("Invalid email or password.", 401);
+      throw AppError("User email does not exist.", 401);
     }
 
+    // Compare password
     const match = await bcrypt.compare(password, foundUser.password);
 
     if (!match) {
-      throw AppError("Invalid email or password.", 401);
+      throw AppError(
+        "Password does not match, provide the right password.",
+        401,
+      );
     }
 
+    // Create JWT
     const token = Jwt.sign(
       {
         id: foundUser.id,
-        username: foundUser.username,
-        email: foundUser.email,
       },
       process.env.ACCESS_SECRET_TOKEN,
       {
         expiresIn: "30m",
       },
     );
-    if (token) {
-      return res.status(200).json({
-        success: true,
-        message: `User ${foundUser.username} has successfully logged in!`,
-        accessToken: token,
-      });
-    } else {
-      throw AppError("Filed to login please try again", 401);
-    }
+
+    // Store JWT in HttpOnly cookie
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 60 * 1000,
+      path: "/",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `User ${foundUser.username} has successfully logged in!`,
+    });
   } catch (err) {
     next(err);
   }
 };
 
-const handleCurrentUser = (req, res) => {
-  res.json({
-    email: req.user.email,
-  });
+const handleCurrentUser = async (req, res, next) => {
+  try {
+    const user = await userModel.findUserById(req.user.id);
+
+    if (!user) {
+      throw AppError("User has not been found.", 404);
+    }
+
+    return res.status(200).json({
+      username: user.username,
+      email: user.email,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = {

@@ -12,12 +12,25 @@ const findAllUsers = async () => {
   return rows;
 };
 
-const createNewUser = async (username, email, password) => {
+const createNewUser = async (username, email, password, createdAt) => {
   const [newUser] = await pool.query(
-    "INSERT INTO users(username, email, password)VALUES(?,?,?)",
-    [username, email, password],
+    "INSERT INTO users(username, email, password, createdAt)VALUES(?,?,?, ?)",
+    [username, email, password, createdAt],
   );
-  return newUser;
+  return {
+    id: newUser.insertId,
+    username,
+    email,
+    createdAt,
+  };
 };
 
-module.exports = { findExistUser, findAllUsers, createNewUser };
+const findUserById = async (id) => {
+  const [rows] = await pool.query(
+    "SELECT id, email, username FROM users WHERE id = ? ",
+    [id],
+  );
+  return rows[0];
+};
+
+module.exports = { findExistUser, findAllUsers, createNewUser, findUserById };

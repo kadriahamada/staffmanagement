@@ -1,26 +1,27 @@
 const Jwt = require("jsonwebtoken");
+const AppError = require("../utils/AppError");
+
 const verifyJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  try {
+    const token = req.cookies.accessToken;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "No token has been provided!" });
-  }
-
-  const token = authHeader.split(" ")[1];
-  if (!token || token === "null") {
-    return res.status(401).json({ message: "Ooops!, Token is missing.." });
-  }
-
-  Jwt.verify(token, process.env.ACCESS_SECRET_TOKEN, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({
-        message: "Invalid or expired token, provide the right token.",
-      });
+    if (!token) {
+      throw AppError("Authentication is required.", 401);
     }
 
-    req.user = decoded;
-    next();
-  });
+    Jwt.verify(token, process.env.ACCESS_SECRET_TOKEN, (err, decoded) => {
+      if (err) {
+        return res.status(403).json({
+          message: "Invalid or expired token, provide the right token.",
+        });
+      }
+
+      req.user = decoded;
+      next();
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = verifyJWT;
