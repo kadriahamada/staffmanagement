@@ -1,6 +1,21 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { logout } from "../../features/auth/authSlice";
 
-const Logout = ({ handleLogout }) => {
+const Logout = () => {
+  const dispatch = useDispatch();
+  const router = useNavigate();
+
+  const handleLogout = async () => {
+    await fetch("http://localhost:3500/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    dispatch(logout());
+    router("/login");
+  };
+
   return (
     <main className="Logout">
       <p>
